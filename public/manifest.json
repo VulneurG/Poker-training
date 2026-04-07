@@ -2,7 +2,7 @@
   "name": "PokerTrainer",
   "short_name": "PokerTrainer",
   "description": "Application d'entraînement poker - ranges, training, scénarios",
-  "start_url": "/poker-training/",
+  "start_url": "/Poker-training/",
   "display": "standalone",
   "background_color": "#030712",
   "theme_color": "#030712",
