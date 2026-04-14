@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react'
-import { Plus, Trash2, Save, ChevronDown } from 'lucide-react'
+import { Plus, Trash2, Download } from 'lucide-react'
 import { useStore, createRange } from '../../store/useStore'
 import HandGrid from '../shared/HandGrid'
+import { PREBUILT_DEFINITIONS, buildPrebuiltRange } from '../../utils/prebuiltRanges'
 import {
   POSITIONS, STACK_SIZES, ACTION_COLORS, ACTION_LABELS,
-  getHandNotation, RANKS,
   type Position, type StackSize, type HandAction, type HandNotation, type Range
 } from '../../types'
 
@@ -25,6 +25,20 @@ export default function RangeEditor() {
   const [frequency, setFrequency] = useState(100)
 
   const selectedRange = ranges.find((r) => r.id === selectedRangeId) ?? null
+
+  const loadPrebuiltRanges = () => {
+    let firstId: string | null = null
+    for (const def of PREBUILT_DEFINITIONS) {
+      const exists = ranges.find((r) => r.id === `prebuilt-${def.position}-${def.stackSize}`)
+      if (!exists) {
+        const range = buildPrebuiltRange(def)
+        addRange(range)
+        if (!firstId) firstId = range.id
+      }
+    }
+    if (firstId) setSelectedRangeId(firstId)
+    else setSelectedRangeId(ranges.find((r) => r.id.startsWith('prebuilt'))?.id ?? null)
+  }
 
   const paintHand = useCallback(
     (hand: HandNotation) => {
@@ -80,14 +94,23 @@ export default function RangeEditor() {
   return (
     <div className="flex flex-col gap-4 p-4 max-w-5xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="text-xl font-bold text-white">Range Editor</h2>
-        <button
-          onClick={() => setShowNewForm(!showNewForm)}
-          className="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
-        >
-          <Plus size={16} /> Nouvelle range
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={loadPrebuiltRanges}
+            className="flex items-center gap-2 bg-purple-700 hover:bg-purple-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+            title="Charge 15 ranges débutant 6-Max (UTG→SB × 20bb/40bb/100bb)"
+          >
+            <Download size={16} /> Ranges débutant 6-Max
+          </button>
+          <button
+            onClick={() => setShowNewForm(!showNewForm)}
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+          >
+            <Plus size={16} /> Nouvelle range
+          </button>
+        </div>
       </div>
 
       {/* New range form */}
@@ -130,32 +153,41 @@ export default function RangeEditor() {
 
       <div className="flex flex-col lg:flex-row gap-4">
         {/* Range list */}
-        <div className="lg:w-52 flex-shrink-0">
+        <div className="lg:w-56 flex-shrink-0">
           <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
             Mes ranges ({ranges.length})
           </h3>
-          <div className="flex flex-col gap-1 max-h-80 overflow-y-auto">
+          <div className="flex flex-col gap-1 max-h-[32rem] overflow-y-auto pr-1">
             {ranges.length === 0 && (
               <p className="text-gray-500 text-sm italic p-2">
-                Aucune range. Créez-en une ci-dessus.
+                Aucune range. Cliquez "Ranges débutant 6-Max" ou créez-en une.
               </p>
             )}
-            {ranges.map((r) => (
-              <button
-                key={r.id}
-                onClick={() => setSelectedRangeId(r.id)}
-                className={`
-                  text-left px-3 py-2 rounded-lg text-sm transition-colors flex justify-between items-center
-                  ${selectedRangeId === r.id
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                  }
-                `}
-              >
-                <span className="font-medium">{r.position}</span>
-                <span className="text-xs opacity-75">{r.stackSize}</span>
-              </button>
-            ))}
+            {/* Grouper par stack size */}
+            {(['100bb','40bb','20bb'] as const).map((stack) => {
+              const group = ranges.filter((r) => r.stackSize === stack)
+              if (group.length === 0) return null
+              const stackColors: Record<string, string> = { '100bb': 'text-green-400', '40bb': 'text-yellow-400', '20bb': 'text-red-400' }
+              return (
+                <div key={stack} className="mb-2">
+                  <div className={`text-xs font-bold px-2 py-0.5 mb-1 ${stackColors[stack] ?? 'text-gray-400'}`}>
+                    {stack}{stack === '20bb' ? ' — Push/Fold' : ''}
+                  </div>
+                  {group.map((r) => (
+                    <button
+                      key={r.id}
+                      onClick={() => setSelectedRangeId(r.id)}
+                      className={`
+                        w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors flex justify-between items-center mb-0.5
+                        ${selectedRangeId === r.id ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}
+                      `}
+                    >
+                      <span className="font-medium">{r.position}</span>
+                    </button>
+                  ))}
+                </div>
+              )
+            })}
           </div>
         </div>
 
