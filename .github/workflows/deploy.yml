@@ -6,45 +6,41 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+  contents: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        run: |
+          git clone --depth=1 "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" repo
+          cd repo
+          git checkout ${{ github.ref_name }}
 
-      - name: Setup Node
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
-        with:
-          node-version: 20
-          cache: npm
+      - name: Setup Node & Build
+        run: |
+          cd repo
+          node --version
+          npm ci
+          npm run build
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Deploy to gh-pages branch
+        run: |
+          cd repo
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
 
-      - name: Build
-        run: npm run build
+          # Move dist out, switch to gh-pages, replace content
+          cp -r dist ../dist_build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
-        with:
-          path: dist
+          git fetch origin gh-pages 2>/dev/null || true
+          git checkout --orphan gh-pages-new
+          git rm -rf . --quiet
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+          cp -r ../dist_build/. .
+          touch .nojekyll
+
+          git add -A
+          git commit -m "Deploy: ${{ github.sha }}"
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages-new:gh-pages --force
