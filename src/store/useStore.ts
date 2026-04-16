@@ -27,7 +27,7 @@ interface AppState {
   recordAttempt: (attempt: TrainingAttempt) => void
 
   // ─── UI State ─────────────────────────────────────────────────────────────
-  activeView: 'dashboard' | 'ranges' | 'training' | 'scenarios'
+  activeView: 'dashboard' | 'ranges' | 'training' | 'scenarios' | 'analyzer'
   setActiveView: (view: AppState['activeView']) => void
 }
 

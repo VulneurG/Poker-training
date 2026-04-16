@@ -1,17 +1,19 @@
 import React from 'react'
-import { LayoutDashboard, BookOpen, Target, Swords } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Target, Swords, FlaskConical } from 'lucide-react'
 import { useStore } from './store/useStore'
 import Dashboard from './components/Dashboard/Dashboard'
 import RangeEditor from './components/RangeEditor/RangeEditor'
 import Training from './components/Training/Training'
 import Scenarios from './components/Scenarios/Scenarios'
+import Analyzer from './components/Analyzer/Analyzer'
 import './index.css'
 
 const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard },
-  { id: 'ranges', label: 'Ranges', Icon: BookOpen },
-  { id: 'training', label: 'Training', Icon: Target },
-  { id: 'scenarios', label: 'Scénarios', Icon: Swords },
+  { id: 'dashboard',  label: 'Dashboard', Icon: LayoutDashboard },
+  { id: 'ranges',     label: 'Ranges',    Icon: BookOpen },
+  { id: 'training',   label: 'Training',  Icon: Target },
+  { id: 'scenarios',  label: 'Scénarios', Icon: Swords },
+  { id: 'analyzer',   label: 'Analyzer',  Icon: FlaskConical },
 ] as const
 
 export default function App() {
@@ -25,12 +27,11 @@ export default function App() {
           <span className="text-xl">♠</span>
           <span className="font-bold text-white tracking-tight">PokerTrainer</span>
         </div>
-        {/* Desktop nav */}
         <nav className="hidden sm:flex gap-1">
           {NAV_ITEMS.map(({ id, label, Icon }) => (
             <button
               key={id}
-              onClick={() => setActiveView(id)}
+              onClick={() => setActiveView(id as typeof activeView)}
               className={`
                 flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors
                 ${activeView === id
@@ -46,12 +47,12 @@ export default function App() {
         </nav>
       </header>
 
-      {/* Content */}
       <main className="flex-1 overflow-y-auto pb-20 sm:pb-4">
-        {activeView === 'dashboard' && <Dashboard />}
-        {activeView === 'ranges' && <RangeEditor />}
-        {activeView === 'training' && <Training />}
-        {activeView === 'scenarios' && <Scenarios />}
+        {activeView === 'dashboard'  && <Dashboard />}
+        {activeView === 'ranges'     && <RangeEditor />}
+        {activeView === 'training'   && <Training />}
+        {activeView === 'scenarios'  && <Scenarios />}
+        {activeView === 'analyzer'   && <Analyzer />}
       </main>
 
       {/* Mobile bottom nav */}
@@ -59,13 +60,13 @@ export default function App() {
         {NAV_ITEMS.map(({ id, label, Icon }) => (
           <button
             key={id}
-            onClick={() => setActiveView(id)}
+            onClick={() => setActiveView(id as typeof activeView)}
             className={`
-              flex-1 flex flex-col items-center gap-0.5 py-2 text-xs transition-colors
+              flex-1 flex flex-col items-center gap-0.5 py-2 text-[10px] transition-colors
               ${activeView === id ? 'text-blue-400' : 'text-gray-500'}
             `}
           >
-            <Icon size={20} />
+            <Icon size={18} />
             <span>{label}</span>
           </button>
         ))}
