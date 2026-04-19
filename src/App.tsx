@@ -1,17 +1,19 @@
 import React from 'react'
-import { LayoutDashboard, BookOpen, Target, Swords, FlaskConical } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Target, Swords, FlaskConical, Lightbulb } from 'lucide-react'
 import { useStore } from './store/useStore'
 import Dashboard from './components/Dashboard/Dashboard'
 import RangeEditor from './components/RangeEditor/RangeEditor'
 import Training from './components/Training/Training'
 import Scenarios from './components/Scenarios/Scenarios'
 import Analyzer from './components/Analyzer/Analyzer'
+import ScenarioTrainer from './components/ScenarioTrainer/ScenarioTrainer'
 import './index.css'
 
 const NAV_ITEMS = [
   { id: 'dashboard',  label: 'Dashboard', short: 'Home',    Icon: LayoutDashboard },
   { id: 'ranges',     label: 'Ranges',    short: 'Ranges',  Icon: BookOpen },
   { id: 'training',   label: 'Training',  short: 'Train',   Icon: Target },
+  { id: 'trainer',    label: 'Décision',  short: 'Décis',   Icon: Lightbulb },
   { id: 'scenarios',  label: 'Scénarios', short: 'Scénar',  Icon: Swords },
   { id: 'analyzer',   label: 'Analyzer',  short: 'Analyz',  Icon: FlaskConical },
 ] as const
@@ -56,6 +58,7 @@ export default function App() {
           {activeView === 'dashboard'  && <Dashboard />}
           {activeView === 'ranges'     && <RangeEditor />}
           {activeView === 'training'   && <Training />}
+          {activeView === 'trainer'    && <ScenarioTrainer />}
           {activeView === 'scenarios'  && <Scenarios />}
           {activeView === 'analyzer'   && <Analyzer />}
         </div>
