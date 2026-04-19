@@ -23,6 +23,7 @@ jobs:
           cd repo
           node --version
           npm ci
+          npm run generate-pwa-assets
           npm run build
 
       - name: Deploy to gh-pages branch

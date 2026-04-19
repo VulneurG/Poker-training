@@ -16,7 +16,7 @@ export default function CardPicker({ usedCards, onSelect, onClose, title }: Card
       onClick={onClose}
     >
       <div
-        className="bg-gray-900 rounded-2xl p-4 border border-gray-700 max-w-sm w-full"
+        className="bg-gray-900 rounded-2xl p-3 sm:p-4 border border-gray-700 max-w-xs sm:max-w-sm w-full mx-2"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-3">

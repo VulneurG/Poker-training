@@ -1,13 +1,46 @@
 @import "tailwindcss";
 
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   margin: 0;
   background: #030712;
   color: #f9fafb;
   font-family: system-ui, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Prevent iOS bounce scroll on body */
+  overscroll-behavior: none;
 }
 
 #root {
   min-height: 100svh;
+  min-height: -webkit-fill-available;
+}
+
+/* Safe area padding for notched iPhones */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-bottom {
+  bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Smooth scrolling */
+main {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Better tap targets */
+button {
+  touch-action: manipulation;
+}
+
+/* Prevent text selection on interactive elements */
+.select-none {
+  -webkit-user-select: none;
+  user-select: none;
 }

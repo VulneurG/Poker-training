@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="felt" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#16a34a"/>
+      <stop offset="100%" stop-color="#052e16"/>
+    </radialGradient>
+  </defs>
+  <!-- App background -->
+  <rect width="512" height="512" rx="96" fill="#030712"/>
+  <!-- Green felt -->
+  <rect x="22" y="22" width="468" height="468" rx="74" fill="url(#felt)"/>
+  <!-- Spade body: two overlapping circles + upward triangle -->
+  <!-- Left lobe -->
+  <circle cx="196" cy="248" r="88" fill="white"/>
+  <!-- Right lobe -->
+  <circle cx="316" cy="248" r="88" fill="white"/>
+  <!-- Upper triangle (upward pointing tip) -->
+  <polygon points="256,96 168,280 344,280" fill="white"/>
+  <!-- Mask to hide lower part of lobes -->
+  <rect x="100" y="290" width="312" height="60" fill="url(#felt)"/>
+  <!-- Stem -->
+  <rect x="236" y="318" width="40" height="76" fill="white"/>
+  <!-- Base -->
+  <rect x="168" y="384" width="176" height="32" rx="8" fill="white"/>
+</svg>

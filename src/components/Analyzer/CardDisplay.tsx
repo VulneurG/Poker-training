@@ -10,9 +10,9 @@ interface CardDisplayProps {
 }
 
 const SIZE_CLASSES = {
-  sm: 'w-7 h-10 text-xs',
-  md: 'w-9 h-13 text-sm',
-  lg: 'w-12 h-17 text-base',
+  sm: 'w-6 h-8 sm:w-7 sm:h-10 text-[9px] sm:text-xs',
+  md: 'w-8 h-11 sm:w-9 sm:h-12 text-xs sm:text-sm',
+  lg: 'w-11 h-15 sm:w-12 sm:h-16 text-sm sm:text-base',
 }
 
 export default function CardDisplay({ card, onClick, size = 'md', faceDown = false, highlight = false }: CardDisplayProps) {
